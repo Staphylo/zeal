@@ -183,7 +183,6 @@ int main(int argc, char *argv[])
     qapp->setStyle(new ZealProxyStyle());
 #endif
 
-
     // Detect already running instance and optionally pass a search query to it.
     if (!clParams.force) {
         QScopedPointer<QLocalSocket> socket(new QLocalSocket());

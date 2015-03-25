@@ -44,3 +44,14 @@ void WebView::updateZoomFactor()
 {
     setZoomFactor(1 + m_zoomFactor / 10.);
 }
+
+void WebView::paintEvent(QPaintEvent *event)
+{
+    QWebView::paintEvent(event);
+    if (m_negativeFilter) {
+        QPainter p(this);
+        p.setCompositionMode(QPainter::CompositionMode_Difference);
+        p.fillRect(event->rect(), Qt::white);
+        p.end();
+    }
+}

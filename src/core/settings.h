@@ -31,6 +31,8 @@ public:
 
     // Browser
     int minimumFontSize;
+    bool negativeFilter;
+    QString stylesheetPath;
     /// TODO: bool askOnExternalLink;
     /// TODO: QString customCss;
 

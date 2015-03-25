@@ -33,6 +33,8 @@ public:
 
     QNetworkAccessManager *networkManager() const;
     Settings *settings() const;
+    MainWindow *mainWindow() const { return m_mainWindow; }
+    bool loadStyleSheet();
 
     static DocsetRegistry *docsetRegistry();
 

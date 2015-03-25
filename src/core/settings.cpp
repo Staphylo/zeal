@@ -49,6 +49,8 @@ void Settings::load()
     m_settings->beginGroup(QStringLiteral("browser"));
     minimumFontSize = m_settings->value(QStringLiteral("minimum_font_size"),
                                         QWebSettings::globalSettings()->fontSize(QWebSettings::MinimumFontSize)).toInt();
+    negativeFilter = m_settings->value(QStringLiteral("negative_filter"), false).toBool();
+    stylesheetPath = m_settings->value(QStringLiteral("stylesheet")).toString();
     m_settings->endGroup();
 
     m_settings->beginGroup(QStringLiteral("proxy"));
@@ -95,6 +97,8 @@ void Settings::save()
 
     m_settings->beginGroup(QStringLiteral("browser"));
     m_settings->setValue(QStringLiteral("minimum_font_size"), minimumFontSize);
+    m_settings->setValue(QStringLiteral("negative_filter"), negativeFilter);
+    m_settings->setValue(QStringLiteral("stylesheet"), stylesheetPath);
     m_settings->endGroup();
 
     m_settings->beginGroup(QStringLiteral("proxy"));

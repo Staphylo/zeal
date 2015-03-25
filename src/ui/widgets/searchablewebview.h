@@ -25,6 +25,7 @@ public:
 
     int zealZoomFactor() const;
     void setZealZoomFactor(int zf);
+    void setNegativeFilter(bool state);
 
 signals:
     void urlChanged(const QUrl &url);

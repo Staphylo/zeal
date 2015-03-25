@@ -8,6 +8,7 @@
     #define QWebPage QWebEnginePage
 #else
     #include <QWebView>
+    #include <QKeyEvent>
 #endif
 
 class WebView : public QWebView
@@ -18,15 +19,21 @@ public:
 
     int zealZoomFactor() const;
     void setZealZoomFactor(int zf);
+    void setNegativeFilter(bool value) {
+        m_negativeFilter = value;
+        update();
+    }
 
 protected:
     QWebView *createWindow(QWebPage::WebWindowType type) override;
     void wheelEvent(QWheelEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
 private:
     void updateZoomFactor();
 
     int m_zoomFactor = 0;
+    bool m_negativeFilter = false;
 };
 
 #endif // WEBVIEW_H

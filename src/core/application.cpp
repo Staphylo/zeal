@@ -7,6 +7,7 @@
 #include "ui/mainwindow.h"
 
 #include <QCoreApplication>
+#include <QApplication>
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QMetaObject>
@@ -14,6 +15,7 @@
 #include <QNetworkProxy>
 #include <QSysInfo>
 #include <QThread>
+#include <QFile>
 
 using namespace Zeal;
 using namespace Zeal::Core;
@@ -149,6 +151,19 @@ QNetworkReply *Application::download(const QUrl &url)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, userAgent);
     return m_networkManager->get(request);
+}
+
+bool Application::loadStyleSheet()
+{
+    if (m_settings->stylesheetPath.isEmpty())
+        return false;
+
+    QFile file(m_settings->stylesheetPath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return false;
+
+    qApp->setStyleSheet(QTextStream(&file).readAll());
+    return true;
 }
 
 void Application::applySettings()

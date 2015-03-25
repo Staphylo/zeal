@@ -95,6 +95,11 @@ void SearchableWebView::setZealZoomFactor(int zf)
     m_webView->setZealZoomFactor(zf);
 }
 
+void SearchableWebView::setNegativeFilter(bool state)
+{
+    m_webView->setNegativeFilter(state);
+}
+
 void SearchableWebView::load(const QUrl &url)
 {
     m_webView->load(url);

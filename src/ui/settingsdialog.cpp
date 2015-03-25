@@ -3,6 +3,8 @@
 #include "docsetlistitemdelegate.h"
 #include "progressitemdelegate.h"
 #include "ui_settingsdialog.h"
+#include "ui/mainwindow.h"
+#include "ui_mainwindow.h"
 #include "core/application.h"
 #include "core/settings.h"
 #include "registry/docsetregistry.h"
@@ -71,6 +73,10 @@ SettingsDialog::SettingsDialog(Core::Application *app, ListModel *listModel, QWi
     connect(ui->minFontSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             this, [](int value) {
         QWebSettings::globalSettings()->setFontSize(QWebSettings::MinimumFontSize, value);
+    });
+
+    connect(ui->negativeFilter, &QCheckBox::clicked, this, [this]() {
+        m_application->mainWindow()->getUi()->webView->setNegativeFilter(ui->negativeFilter->isChecked());
     });
 
     connect(ui->addFeedButton, &QPushButton::clicked, this, &SettingsDialog::addDashFeed);
@@ -300,6 +306,8 @@ void SettingsDialog::loadSettings()
     //
     ui->minFontSize->setValue(settings->minimumFontSize);
     ui->storageEdit->setText(QDir::toNativeSeparators(settings->docsetPath));
+    ui->stylesheetEdit->setText(QDir::toNativeSeparators(settings->stylesheetPath));
+    ui->negativeFilter->setChecked(settings->negativeFilter);
 
     // Network Tab
     switch (settings->proxyType) {
@@ -485,12 +493,18 @@ void SettingsDialog::on_downloadDocsetButton_clicked()
         ui->downloadDocsetButton->setText(tr("Stop downloads"));
 }
 
+void SettingsDialog::on_stylesheetButton_clicked()
+{
+    QString stylesheet = QFileDialog::getOpenFileName(0, tr("Choose stylesheet"), "/home", tr("CSS (*.css)"));
+    if (!stylesheet.isEmpty())
+        ui->stylesheetEdit->setText(QDir::toNativeSeparators(stylesheet));
+}
+
 void SettingsDialog::on_storageButton_clicked()
 {
     QString dir = QFileDialog::getExistingDirectory(0, tr("Open Directory"));
     if (!dir.isEmpty())
         ui->storageEdit->setText(QDir::toNativeSeparators(dir));
-
 }
 
 void SettingsDialog::on_deleteButton_clicked()
@@ -585,6 +599,12 @@ void SettingsDialog::saveSettings()
 
     //
     settings->minimumFontSize = ui->minFontSize->text().toInt();
+    settings->negativeFilter = ui->negativeFilter->isChecked();
+
+    if (QDir::fromNativeSeparators(ui->stylesheetEdit->text()) != settings->stylesheetPath) {
+        settings->stylesheetPath = QDir::fromNativeSeparators(ui->stylesheetEdit->text());
+        m_application->loadStyleSheet();
+    }
 
     if (QDir::fromNativeSeparators(ui->storageEdit->text()) != settings->docsetPath) {
         settings->docsetPath = QDir::fromNativeSeparators(ui->storageEdit->text());

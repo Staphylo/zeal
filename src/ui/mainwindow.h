@@ -76,6 +76,7 @@ public:
 
     void bringToFront(const Zeal::SearchQuery &query = Zeal::SearchQuery());
     void createTab();
+    Ui::MainWindow* getUi() const { return ui; }
 
 protected:
     void closeEvent(QCloseEvent *event) override;

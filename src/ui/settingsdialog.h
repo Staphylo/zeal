@@ -43,6 +43,7 @@ private slots:
     void on_downloadProgress(qint64 received, qint64 total);
     void on_downloadDocsetButton_clicked();
     void on_storageButton_clicked();
+    void on_stylesheetButton_clicked();
     void on_deleteButton_clicked();
     void on_installedDocsetList_clicked(const QModelIndex &index);
     void on_tabWidget_currentChanged(int current);

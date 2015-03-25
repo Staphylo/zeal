@@ -94,6 +94,11 @@ MainWindow::MainWindow(Core::Application *app, QWidget *parent) :
 #else
     ui->webView->page()->setNetworkAccessManager(m_zealNetworkManager);
 #endif
+    ui->webView->setNegativeFilter(m_settings->negativeFilter);
+    m_application->loadStyleSheet();
+
+    if (!m_settings->stylesheetPath.isEmpty()) {
+    }
 
     // menu
     if (QKeySequence(QKeySequence::Quit) != QKeySequence(QStringLiteral("Ctrl+Q"))) {

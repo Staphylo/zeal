@@ -1,0 +1,16 @@
+* {
+    background-color: #2D323D;
+    color: #C7CBD5;
+}
+
+QLineEdit QLabel {
+    background-color: none;
+}
+
+QMenu::item:disabled {
+    color: #666;
+}
+
+QMenu::item:selected, QPushButton::hover {
+    background-color: #3F4654;
+}

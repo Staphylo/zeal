@@ -171,13 +171,13 @@ void SettingsDialog::downloadCompleted()
     QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(
                 qobject_cast<QNetworkReply *>(sender()));
 
-    replies.removeOne(reply.data());
+    m_replies.removeOne(reply.data());
 
     if (reply->error() != QNetworkReply::NoError) {
         if (reply->error() != QNetworkReply::OperationCanceledError)
             QMessageBox::warning(this, tr("Network Error"), reply->errorString());
 
-        if (replies.isEmpty())
+        if (m_replies.isEmpty())
             resetProgress();
 
         return;
@@ -287,7 +287,7 @@ void SettingsDialog::downloadCompleted()
     }
 
     // If all enqueued downloads have finished executing
-    if (replies.isEmpty())
+    if (m_replies.isEmpty())
         resetProgress();
 }
 
@@ -361,12 +361,12 @@ void SettingsDialog::displayProgress()
 {
     ui->docsetsProgress->setValue(percent(m_combinedReceived, m_combinedTotal));
     ui->docsetsProgress->setMaximum(100);
-    ui->docsetsProgress->setVisible(!replies.isEmpty());
+    ui->docsetsProgress->setVisible(!m_replies.isEmpty());
 }
 
 void SettingsDialog::resetProgress()
 {
-    if (!replies.isEmpty())
+    if (!m_replies.isEmpty())
         return;
 
     m_combinedReceived = 0;
@@ -474,7 +474,7 @@ void SettingsDialog::on_availableDocsetList_itemSelectionChanged()
 
 void SettingsDialog::on_downloadDocsetButton_clicked()
 {
-    if (!replies.isEmpty()) {
+    if (!m_replies.isEmpty()) {
         stopDownloads();
         return;
     }
@@ -491,9 +491,6 @@ void SettingsDialog::on_downloadDocsetButton_clicked()
 
         downloadDashDocset(item->data(ListModel::DocsetNameRole).toString());
     }
-
-    if (replies.count() > 0)
-        ui->downloadDocsetButton->setText(tr("Stop downloads"));
 }
 
 void SettingsDialog::on_stylesheetButton_clicked()
@@ -564,7 +561,7 @@ QNetworkReply *SettingsDialog::startDownload(const QUrl &url)
 
     QNetworkReply *reply = m_application->download(url);
     connect(reply, &QNetworkReply::downloadProgress, this, &SettingsDialog::on_downloadProgress);
-    replies.append(reply);
+    m_replies.append(reply);
 
     ui->downloadDocsetButton->setText(tr("Stop downloads"));
     ui->refreshButton->setEnabled(false);
@@ -576,7 +573,7 @@ QNetworkReply *SettingsDialog::startDownload(const QUrl &url)
 
 void SettingsDialog::stopDownloads()
 {
-    for (QNetworkReply *reply : replies) {
+    for (QNetworkReply *reply : m_replies) {
         // Hide progress bar
         QListWidgetItem *listItem = ui->availableDocsetList->item(reply->property(ListItemIndexProperty).toInt());
         if (!listItem)

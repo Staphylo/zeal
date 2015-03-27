@@ -366,6 +366,9 @@ void SettingsDialog::displayProgress()
 
 void SettingsDialog::resetProgress()
 {
+    if (!replies.isEmpty())
+        return;
+
     m_combinedReceived = 0;
     m_combinedTotal = 0;
     displayProgress();

@@ -3,7 +3,8 @@
     color: #C7CBD5;
 }
 
-QLineEdit QLabel {
+/* removing some background-color messed up by the wildcard */
+QLineEdit QLabel, WebView {
     background-color: none;
 }
 
